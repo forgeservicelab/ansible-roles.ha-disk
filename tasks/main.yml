@@ -3,7 +3,7 @@
   shell: 'echo "n\np\n1\n\n+150M\nn\np\n2\n\n\nt\n2\n8e\nw" | fdisk {{ block_device }}'
   when: "not ansible_devices.{{ block_device.split('/')[2] }}.partitions"
 
-- name: Install LVM, DRBD and Heartbeat
+- name: Install LVM and DRBD
   apt:
     pkg={{ item }}
     state=present
