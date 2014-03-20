@@ -10,7 +10,6 @@
   with_items:
     - lvm2
     - drbd8-utils
-    - heartbeat
 
 - name: Setup the LVM Volume Group
   lvg:
@@ -81,33 +80,11 @@
   changed_when: "0 != primaryset.rc"
   notify: restart drbd
 
-- name: Include OpenStack specific tasks
-  include: openstack.yml
-  when: IS_TARGET_OPENSTACK
-
-- name: Configure Heartbeat
-  template:
-    src=hb_ha.cf.j2
-    dest=/etc/heartbeat/ha.cf
-    owner=root
-    group=root
-    mode=0640
-  notify: restart heartbeat
-
-- name: Configure Heartbeat Resources
+- name: Reconfigure Heartbeat Resources
   template:
     src=hb_haresources.j2
     dest=/etc/heartbeat/haresources
     owner=root
     group=root
     mode=0640
-  notify: restart heartbeat
-
-- name: Configure Heartbeat Auth
-  template:
-    src=hb_authkeys.j2
-    dest=/etc/heartbeat/authkeys
-    owner=root
-    group=root
-    mode=0600
   notify: restart heartbeat

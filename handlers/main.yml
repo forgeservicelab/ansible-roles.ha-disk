@@ -3,8 +3,3 @@
   service:
     name=drbd
     state=restarted
-
-- name: restart heartbeat
-  service:
-    name=heartbeat
-    state=restarted
