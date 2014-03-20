@@ -80,7 +80,7 @@
   changed_when: "0 != primaryset.rc"
   notify: restart drbd
 
-- name: Reconfigure Heartbeat Resources
+- name: Configure Heartbeat Resources
   template:
     src=hb_haresources.j2
     dest=/etc/heartbeat/haresources
