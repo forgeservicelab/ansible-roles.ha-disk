@@ -59,7 +59,9 @@
 - name: Initialize the DRBD metadata if needed
   shell: "echo yes | drbdadm create-md {{ group_names[0] }}"
   when: "255 == configured.rc"
-  notify: restart drbd
+  notify: 
+    - restart heartbeat
+    - restart drbd
 
 - meta: flush_handlers
 
@@ -70,7 +72,9 @@
   # Don't fail on 'already syncing invalidation error'
   failed_when: "11 != invalidated.rc and 0 != invalidated.rc" 
   changed_when: "11 != invalidated.rc"
-  notify: restart drbd
+  notify: 
+    - restart heartbeat
+    - restart drbd
 
 - name: Set DRBD primary
   shell: "drbdadm primary {{ group_names[0] }}"
@@ -78,7 +82,9 @@
   register: primaryset
   failed_when: "11 != primaryset.rc and 0 != primaryset.rc"
   changed_when: "0 != primaryset.rc"
-  notify: restart drbd
+  notify: 
+    - restart heartbeat
+    - restart drbd
 
 - name: Configure Heartbeat Resources
   template:
