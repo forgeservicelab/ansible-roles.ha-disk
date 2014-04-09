@@ -63,8 +63,6 @@
     - restart heartbeat
     - restart drbd
 
-- meta: flush_handlers
-
 - name: Invalidate DRBD on secondary node
   shell: "drbdadm invalidate {{ group_names[0] }}"
   when: "primary is not defined"
