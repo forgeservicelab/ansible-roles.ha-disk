@@ -1,5 +1,5 @@
 ---
 - name: restart drbd
   service:
-    name=drbd
-    state=restarted
+    name: drbd
+    state: restarted

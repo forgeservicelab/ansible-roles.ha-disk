@@ -5,27 +5,27 @@
 
 - name: Install LVM and DRBD
   apt:
-    pkg={{ item }}
-    state=present
+    pkg: "{{ item }}"
+    state: present
   with_items:
     - lvm2
     - drbd8-utils
 
 - name: Setup the LVM Volume Group
   lvg:
-    vg=data
-    pvs="{{ block_device }}2"
+    vg: data
+    pvs: "{{ block_device }}2"
 
 - name: Setup the LV Logical Volume
   lvol:
-    vg=data
-    lv="{{ group_names[0] }}"
-    size=100%VG
+    vg: data
+    lv: "{{ group_names[0] }}"
+    size: 100%VG
 
 - name: Format the Logical Volume
   filesystem:
-    fstype=ext4
-    dev="/dev/data/{{ group_names[0] }}"
+    fstype: ext4
+    dev: "/dev/data/{{ group_names[0] }}"
 
 - name: Is metadata partition zeroed out?
   script: "isheadzero.sh -d {{ block_device }}1 -s 128"
@@ -39,16 +39,16 @@
 
 - name: Configure DRBD
   template:
-    src=../templates/drbd.j2
-    dest=/etc/drbd.conf
-    owner=root
-    group=root
-    mode=0644
+    src: ../templates/drbd.j2
+    dest: /etc/drbd.conf
+    owner: root
+    group: root
+    mode: 0644
 
 - name: Install the drbd module
   modprobe:
-    name=drbd
-    state=present
+    name: drbd
+    state: present
 
 - name: Is DRBD initialized?
   shell: "drbdmeta /dev/drbd0 v06 0 dstate"
@@ -86,9 +86,9 @@
 
 - name: Configure Heartbeat Resources
   template:
-    src=hb_haresources.j2
-    dest=/etc/heartbeat/haresources
-    owner=root
-    group=root
-    mode=0640
+    src: hb_haresources.j2
+    dest: /etc/heartbeat/haresources
+    owner: root
+    group: root
+    mode: 0640
   notify: restart heartbeat
