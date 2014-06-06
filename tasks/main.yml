@@ -15,6 +15,7 @@
   lvg:
     vg: data
     pvs: "{{ block_device }}2"
+    vg_options: ''
 
 - name: Setup the LV Logical Volume
   lvol:
