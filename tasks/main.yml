@@ -17,7 +17,7 @@
     pvs: "{{ block_device }}2"
     vg_options: ''
 
-- name: Setup the LV Logical Volume
+- name: Setup the LVM Logical Volume
   lvol:
     vg: data
     lv: "{{ group_names[0] }}"
@@ -63,6 +63,11 @@
   notify: 
     - restart heartbeat
     - restart drbd
+
+- name: Start DRBD service
+  service:
+    name: drbd
+    state: restarted
 
 - name: Invalidate DRBD on secondary node
   shell: "drbdadm invalidate {{ group_names[0] }}"
