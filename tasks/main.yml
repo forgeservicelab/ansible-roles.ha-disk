@@ -56,7 +56,6 @@
   when: "255 == configured.rc"
   notify: 
     - restart heartbeat
-    - restart drbd
 
 - name: Start DRBD service
   service:
