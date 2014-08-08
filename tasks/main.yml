@@ -61,6 +61,7 @@
   service:
     name: drbd
     state: restarted
+    sleep: 10
 
 - name: Invalidate DRBD on secondary node
   shell: "drbdadm invalidate {{ group_names[0] }}"
