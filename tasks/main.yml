@@ -71,8 +71,8 @@
   failed_when: "11 != invalidated.rc and 0 != invalidated.rc" 
   changed_when: "11 != invalidated.rc"
   notify: 
-    - restart heartbeat
     - restart drbd
+    - restart heartbeat
 
 - name: Set DRBD primary
   shell: "drbdadm primary {{ group_names[0] }}"
@@ -81,8 +81,8 @@
   failed_when: "11 != primaryset.rc and 0 != primaryset.rc"
   changed_when: "0 != primaryset.rc"
   notify: 
-    - restart heartbeat
     - restart drbd
+    - restart heartbeat
 
 - name: Configure Heartbeat Resources
   template:
