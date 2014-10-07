@@ -23,7 +23,7 @@ resource {{ group_names[0] }} {
 
   net {
     after-sb-0pri discard-least-changes;
-    after-sb-1pri discard-secondary;
+    after-sb-1pri consensus;
     after-sb-2pri call-pri-lost-after-sb;
   }
 {% for host in groups[group_names[0]] %}
