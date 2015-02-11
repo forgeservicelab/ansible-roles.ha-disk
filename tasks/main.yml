@@ -1,7 +1,7 @@
 ---
 - name: Partition the data disk
   shell: 'echo "n\np\n1\n\n+150M\nn\np\n2\n\n\nt\n2\n8e\nw" | fdisk {{ block_device }}'
-  when: "not ansible_devices.{{ block_device.split('/')[2] }}.partitions"
+  when: "not ansible_devices.{{ block_device.split('/')[2] }}.partitions and block_device is defined"
 
 - name: Install LVM and DRBD
   apt:
@@ -16,6 +16,7 @@
     vg: data
     pvs: "{{ block_device }}2"
     vg_options: ''
+  when: "block_device is defined"
 
 - name: Setup the LVM Logical Volume
   lvol:
@@ -49,12 +50,12 @@
 
 - name: Zero-out the head of the metadata partition if needed
   shell: "dd if=/dev/zero of={{ block_device }}1 bs=1M count=128"
-  when: "255 == configured.rc"
+  when: "255 == configured.rc and block_device is defined"
 
 - name: Initialize the DRBD metadata if needed
   shell: "echo yes | drbdadm create-md {{ group_names[0] }}"
   when: "255 == configured.rc"
-  notify: 
+  notify:
     - restart heartbeat
 
 - name: Start DRBD service
@@ -68,9 +69,9 @@
   when: "primary is not defined"
   register: invalidated
   # Don't fail on 'already syncing invalidation error'
-  failed_when: "11 != invalidated.rc and 0 != invalidated.rc" 
+  failed_when: "11 != invalidated.rc and 0 != invalidated.rc"
   changed_when: "11 != invalidated.rc"
-  notify: 
+  notify:
     - restart drbd
     - restart heartbeat
 
@@ -80,7 +81,7 @@
   register: primaryset
   failed_when: "11 != primaryset.rc and 0 != primaryset.rc"
   changed_when: "0 != primaryset.rc"
-  notify: 
+  notify:
     - restart drbd
     - restart heartbeat
 
